@@ -20,6 +20,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const db = require("./app/models");
 db.sequelize.sync();
 
+if (process.argv.length > 2) {
+  if (process.argv[2] === 'testdata') {
+    require("./testdataloader")(db);
+  }
+}
 // for cleaning databases
 /*
 db.sequelize.sync({ force: true }).then(() => {
@@ -36,6 +41,7 @@ require("./app/routes/tournament.routes")(app);
 require("./app/routes/player.routes")(app);
 require("./app/routes/tournament-player.routes")(app);
 require("./app/routes/session.routes")(app);
+require("./app/routes/protocol.routes")(app);
 require("./app/routes/deal.routes")(app);
 require("./app/routes/session-player.routes")(app);
 require("./app/routes/deal-player.routes")(app);

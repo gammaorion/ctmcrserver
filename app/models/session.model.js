@@ -8,6 +8,9 @@ module.exports = (sequelize, Sequelize) => {
     },
     dealsPlayed: {
       type: Sequelize.INTEGER
+    },
+    isComplete: {
+      type: Sequelize.BOOLEAN
     }
   });
 

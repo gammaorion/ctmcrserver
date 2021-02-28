@@ -7,6 +7,10 @@ module.exports = app => {
 
   router.get("/bytournament/:id", session.findByTournament);
 
+  router.get("/close/:id", session.closeSession);
+
+  router.get("/reopen/:id", session.reopenSession);
+
   router.get("/:id", session.findOne);
 
   router.put("/:id", session.update);

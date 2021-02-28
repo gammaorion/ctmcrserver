@@ -3,29 +3,44 @@ const Session = db.sessions;
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
-  if (!req.body.tournamentId || ! req.body.tableNumber ||
-    !req.body.tourNumber) {
+  if (!req.body.tournamentId ||
+      !req.body.tableNumber ||
+      !req.body.tourNumber) {
       res.status(400).send({
         message: "Tournament id, table number and tour number must be filled!"
       });
       return;
   }
 
-  const session = {
-    tournamentId: req.body.tournamentId,
-    tourNumber: req.body.tourNumber,
-    tableNumber: req.body.tableNumber,
-    dealsPlayed: req.body.dealsPlayed || 0
-  };
-
-  Session.create(session)
+  Session.findAll({ where: req.body })
     .then(data => {
-      res.send(data);
+      if (data.length > 0) {
+        res.send(data[0]);
+      } else {
+        const session = {
+          tournamentId: req.body.tournamentId,
+          tourNumber: req.body.tourNumber,
+          tableNumber: req.body.tableNumber,
+          dealsPlayed: req.body.dealsPlayed || 0,
+          isComplete: req.body.isComplete || false
+        };
+
+        Session.create(session)
+          .then(data => {
+            res.send(data);
+          })
+          .catch(err => {
+            res.status(500).send({
+              message:
+                err.message || "Some error occurred while creating a session"
+            });
+          });
+      }
     })
     .catch(err => {
       res.status(500).send({
         message:
-          err.message || "Some error occurred while creating a session"
+          err.message || "Some error occurred while retrieving sessions"
       });
     });
 };
@@ -132,4 +147,26 @@ exports.delete = (req, res) => {
         message: "Could not delete session with id=" + id
       });
     });
+};
+
+exports.closeSession = (req, res) => {
+  const id = req.params.id;
+  if (!id) {
+    res.status(400).send({
+      message: "Session ID must not be empty!"
+    });
+    return;
+  }
+
+};
+
+exports.reopenSession = (req, res) => {
+  const id = req.params.id;
+  if (!id) {
+    res.status(400).send({
+      message: "Session ID must not be empty!"
+    });
+    return;
+  }
+
 };
