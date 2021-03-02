@@ -9,6 +9,9 @@ module.exports = (sequelize, Sequelize) => {
     dealsPlayed: {
       type: Sequelize.INTEGER
     },
+    sessionComment: {
+      type: Sequelize.STRING
+    },
     isComplete: {
       type: Sequelize.BOOLEAN
     }

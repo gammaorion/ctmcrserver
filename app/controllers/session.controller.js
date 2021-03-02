@@ -12,8 +12,13 @@ exports.create = (req, res) => {
       return;
   }
 
-  Session.findAll({ where: req.body })
-    .then(data => {
+  Session.findAll({
+     where: {
+        tournamentId: req.body.tournamentId,
+        tourNumber: req.body.tourNumber,
+        tableNumber: req.body.tableNumber
+      }
+    }).then(data => {
       if (data.length > 0) {
         res.send(data[0]);
       } else {
@@ -21,8 +26,9 @@ exports.create = (req, res) => {
           tournamentId: req.body.tournamentId,
           tourNumber: req.body.tourNumber,
           tableNumber: req.body.tableNumber,
+          sessionComment: req.body.sessionComment || '',
           dealsPlayed: req.body.dealsPlayed || 0,
-          isComplete: req.body.isComplete || false
+          isComplete: false
         };
 
         Session.create(session)
@@ -98,7 +104,13 @@ exports.update = (req, res) => {
     return;
   }
 
-  Session.update(req.body, {
+  Session.update({
+    tournamentId: req.body.tournamentId,
+    tourNumber: req.body.tourNumber,
+    tableNumber: req.body.tableNumber,
+    sessionComment: req.body.sessionComment || '',
+    dealsPlayed: req.body.dealsPlayed || 0
+  }, {
     where: { id: id }
   })
     .then(num => {
@@ -158,6 +170,27 @@ exports.closeSession = (req, res) => {
     return;
   }
 
+  Session.update({
+    isComplete: true
+  }, {
+    where: { id: id }
+  })
+    .then(num => {
+      if (num == 1) {
+        res.send({
+          message: "Session was closed successfully."
+        });
+      } else {
+        res.send({
+          message: `Cannot close session with id=${id}!`
+        });
+      }
+    })
+    .catch(err => {
+      res.status(500).send({
+        message: "Error closing session with id=" + id
+      });
+    });
 };
 
 exports.reopenSession = (req, res) => {
@@ -169,4 +202,25 @@ exports.reopenSession = (req, res) => {
     return;
   }
 
+  Session.update({
+    isComplete: false
+  }, {
+    where: { id: id }
+  })
+    .then(num => {
+      if (num == 1) {
+        res.send({
+          message: "Session was reopened successfully."
+        });
+      } else {
+        res.send({
+          message: `Cannot reopen session with id=${id}!`
+        });
+      }
+    })
+    .catch(err => {
+      res.status(500).send({
+        message: "Error reopening session with id=" + id
+      });
+    });
 };

@@ -1,9 +1,12 @@
 module.exports = (sequelize, Sequelize) => {
   const SessionPlayer = sequelize.define("sessionPlayer", {
-    tourPoints: {
-      type: Sequelize.INTEGER
+    tournamentPoints: {
+      type: Sequelize.FLOAT
     },
     gamePoints: {
+      type: Sequelize.INTEGER
+    },
+    handsTaken: {
       type: Sequelize.INTEGER
     },
     wind: {  // see wind.dictionary

@@ -16,6 +16,7 @@ exports.saveProtocol = async (req, res) => {
   //  -- wind
   //  -- gamePoints
   //  -- tourPoints
+  //  -- handsTaken
   //  - dealActions: Array
   //  -- handPoints
   //  -- result (code)
@@ -130,6 +131,13 @@ exports.saveProtocol = async (req, res) => {
 
       console.log("Removed obsolete deal players: " + removeObsolete);
     }
+
+    await Session.update({
+      dealsPlayed: dealActions.length
+    }, {
+      where: { id: sessionId },
+      transaction: wholeUpdate
+    });
 
     await wholeUpdate.commit();
 

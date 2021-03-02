@@ -10,7 +10,7 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.INTEGER
     },
     tournamentPoints: {
-      type: Sequelize.INTEGER
+      type: Sequelize.FLOAT
     },
     competitionPoints: {
       type: Sequelize.FLOAT
